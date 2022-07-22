@@ -26,17 +26,22 @@ type ICPMPacket struct {
 
 // 0xFFFF - (Type * 256 + Code + Identifier + SequenceNum)
 func (pkt ICPMPacket) CalcChecksum() uint16 {
-	return (^((uint16(pkt.Type) << 8) +
+	sum := (^((uint16(pkt.Type) << 8) +
 		uint16(pkt.Code) +
+		uint16(pkt.Identifier) +
 		uint16(pkt.SequenceNum)))
+
+	return sum
 }
 
 func Ping(dest string) {
 	var (
-		raddr, _ = net.ResolveIPAddr("ip", dest)
+		raddr, _    = net.ResolveIPAddr("ip", dest)
+		recv_buffer = make([]byte, 1024)
 	)
 
 	// Generate Checksum
+	send_buffer.Reset()
 	send_pkt.Checksum = send_pkt.CalcChecksum()
 	binary.Write(&send_buffer, binary.BigEndian, send_pkt)
 
@@ -45,8 +50,8 @@ func Ping(dest string) {
 	defer conn.Close()
 
 	// Send packet
-	title = fmt.Sprintf("PING %s (%s)", dest, raddr.String())
-	output_box.SetTitle(title)
+	screen.title = fmt.Sprintf("PING %s (%s)", dest, raddr.String())
+	screen.UpdateTitle()
 	_, err = conn.Write(send_buffer.Bytes())
 	CheckErr(err)
 	conn.SetReadDeadline(time.Now().Add(3 * time.Second))
@@ -57,7 +62,7 @@ func Ping(dest string) {
 	CheckErr(err)
 	duration := float64(time.Since(startTime).Nanoseconds()) / 1000000
 
-	// Check Checksum is correct
+	// Check if Checksum is correct
 	recv_pkt = ICPMPacket{Type: uint8(recv_buffer[20]),
 		Code:        uint8(recv_buffer[21]),
 		Checksum:    (uint16(recv_buffer[22]) << 8) + uint16(recv_buffer[23]),
@@ -66,9 +71,16 @@ func Ping(dest string) {
 	}
 
 	if recv_pkt.CalcChecksum() != recv_pkt.Checksum {
+		app.Stop()
+		fmt.Println(recv_buffer)
+		fmt.Println(recv_pkt.Checksum, recv_pkt.CalcChecksum())
 		panic("The checksum of the reply is incorrect")
 	}
 
-	screen = fmt.Sprintf("Reply from (%s): imcp_seq=%d time=%.2fms\n%s", raddr.String(), recv_pkt.SequenceNum, duration, screen)
-	fmt.Fprintf(output_box, screen)
+	if len(screen.content) == 0 {
+		screen.content = fmt.Sprintf("Reply from (%s): imcp_seq=%d time=%.2fms", raddr.String(), recv_pkt.SequenceNum, duration)
+	} else {
+		screen.content = fmt.Sprintf("Reply from (%s): imcp_seq=%d time=%.2fms\n%s", raddr.String(), recv_pkt.SequenceNum, duration, screen.content)
+	}
+	screen.UpdateContent()
 }

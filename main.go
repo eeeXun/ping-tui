@@ -17,8 +17,7 @@ var (
 	app        = tview.NewApplication()
 	input_box  = tview.NewInputField()
 	output_box = tview.NewTextView()
-	title      string
-	screen     string
+	screen     Screen
 	// Control
 	stop_ping bool
 )
