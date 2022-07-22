@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gdamore/tcell/v2"
 )
 
@@ -36,13 +35,11 @@ func UIInit() {
 func InputDoneHandle(key tcell.Key) {
 	switch key {
 	case tcell.KeyEnter:
-		output_box.SetTitle(input_box.GetText())
-		output_box.Clear()
-		fmt.Fprintf(output_box, "Hello\n%s", input_box.GetText())
-	case tcell.KeyEscape:
-		output_box.SetTitle(input_box.GetText())
+		Ping(input_box.GetText())
 	case tcell.KeyTab, tcell.KeyBacktab:
 		app.SetFocus(output_box)
+	case tcell.KeyEscape:
+		output_box.SetTitle(input_box.GetText())
 	}
 }
 
@@ -51,7 +48,7 @@ func InputCaptureHandle(event *tcell.EventKey) *tcell.EventKey {
 
 	switch key {
 	case tcell.KeyCtrlD, tcell.KeyCtrlQ:
-		app.Stop()
+		stop_ping = false
 	}
 
 	return event
