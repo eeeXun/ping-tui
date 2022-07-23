@@ -20,8 +20,8 @@ var (
 	output_box = tview.NewTextView()
 	screen     = Screen{title: "PING"}
 	// Control
-	stop_ping bool
-	sec       = time.Second
+	stop_ping bool = true
+	sec            = time.Second
 )
 
 func main() {

@@ -76,6 +76,7 @@ func Ping(dest string) {
 		CheckErr(err)
 		duration = float64(time.Since(startTime).Nanoseconds()) / 1000000
 
+		// Reference: https://en.wikipedia.org/wiki/Ping_(networking_utility)#ICMP_packet
 		TTL = uint8(recv_buffer[8])
 		// Check if Checksum is correct
 		recv_pkt = ICPMPacket{Type: uint8(recv_buffer[20]),

@@ -2,7 +2,13 @@ package main
 
 import (
 	"github.com/gdamore/tcell/v2"
+	"github.com/rivo/tview"
 )
+
+type Output struct {
+	*tview.TextView
+	title string
+}
 
 func UIInit() {
 	bg := tcell.ColorDarkCyan
@@ -35,8 +41,10 @@ func UIInit() {
 func InputDoneHandle(key tcell.Key) {
 	switch key {
 	case tcell.KeyEnter:
-		stop_ping = false
-		go Ping(input_box.GetText())
+		if stop_ping {
+			stop_ping = false
+			go Ping(input_box.GetText())
+		}
 	case tcell.KeyTab, tcell.KeyBacktab:
 		app.SetFocus(output_box)
 	case tcell.KeyEscape:
