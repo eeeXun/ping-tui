@@ -36,10 +36,13 @@ func (pkt ICPMPacket) CalcChecksum() uint16 {
 
 func Ping(dest string) {
 	var (
-		raddr, _           = net.ResolveIPAddr("ip", dest)
-		recv_buffer        = make([]byte, 1024)
-		seq         uint16 = 1
-		TTL         uint8
+		// ICMP
+		raddr, _        = net.ResolveIPAddr("ip", dest)
+		seq      uint16 = 1
+		TTL      uint8
+		// Time
+		startTime time.Time
+		duration  float64
 	)
 
 	for ; ; seq++ {
@@ -47,9 +50,12 @@ func Ping(dest string) {
 			return
 		}
 
+		// Init
 		send_pkt.SequenceNum = seq
-		// Generate Checksum
 		send_buffer.Reset()
+		recv_buffer = make([]byte, 1024)
+
+		// Generate Checksum
 		send_pkt.Checksum = send_pkt.CalcChecksum()
 		binary.Write(&send_buffer, binary.BigEndian, send_pkt)
 
@@ -62,13 +68,13 @@ func Ping(dest string) {
 		screen.UpdateTitle()
 		_, err = conn.Write(send_buffer.Bytes())
 		CheckErr(err)
-		conn.SetReadDeadline(time.Now().Add(3 * time.Second))
+		conn.SetReadDeadline(time.Now().Add(3 * sec))
 
 		// Recv packet
-		startTime := time.Now()
+		startTime = time.Now()
 		_, err = conn.Read(recv_buffer)
 		CheckErr(err)
-		duration := float64(time.Since(startTime).Nanoseconds()) / 1000000
+		duration = float64(time.Since(startTime).Nanoseconds()) / 1000000
 
 		TTL = uint8(recv_buffer[8])
 		// Check if Checksum is correct
@@ -91,8 +97,9 @@ func Ping(dest string) {
 		} else {
 			screen.content = fmt.Sprintf("Reply from (%s): imcp_seq=%d ttl=%d time=%.2fms\n%s", raddr.String(), recv_pkt.SequenceNum, TTL, duration, screen.content)
 		}
+
 		screen.UpdateContent()
 
-		time.Sleep(1 * time.Second)
+		time.Sleep(1 * sec)
 	}
 }

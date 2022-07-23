@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"github.com/rivo/tview"
 	"net"
+	"time"
 )
 
 var (
@@ -17,9 +18,10 @@ var (
 	app        = tview.NewApplication()
 	input_box  = tview.NewInputField()
 	output_box = tview.NewTextView()
-	screen     Screen
+	screen     = Screen{title: "PING"}
 	// Control
 	stop_ping bool
+	sec       = time.Second
 )
 
 func main() {

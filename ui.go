@@ -26,7 +26,7 @@ func UIInit() {
 
 	// tview.Box method
 	output_box.SetBorder(true).
-		SetTitle("Output").
+		SetTitle(screen.title).
 		SetBackgroundColor(bg).
 		SetBorderColor(fg).
 		SetTitleColor(fg)

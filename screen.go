@@ -12,4 +12,5 @@ func (s Screen) UpdateTitle() {
 func (s Screen) UpdateContent() {
 	output_box.SetText(s.content)
 	output_box.ScrollToBeginning()
+	app.Draw()
 }
