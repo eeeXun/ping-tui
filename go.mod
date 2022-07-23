@@ -1,4 +1,4 @@
-module ping
+module ping-tui
 
 go 1.18
 

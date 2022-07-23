@@ -29,7 +29,7 @@ func main() {
 		tview.NewFlex().SetDirection(tview.FlexRow).
 			AddItem(input_box, 0, 1, true).
 			AddItem(output_box, 0, 6, false),
-		true).Run(); err != nil {
+		true).EnableMouse(true).Run(); err != nil {
 		panic(err)
 	}
 }
