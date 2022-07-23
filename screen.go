@@ -6,23 +6,29 @@ import(
 
 type OutputScreen struct {
 	*tview.TextView
-	title   string
-	content string
+	Title   string
+	Content string
 }
 
 func NewOutputScreen() *OutputScreen {
 	return &OutputScreen{
 		TextView: tview.NewTextView(),
-		title: "Ping",
+		Title: "Ping",
 	}
 }
 
 func (s OutputScreen) UpdateTitle() {
-	s.SetTitle(s.title)
+	s.SetTitle(s.Title)
 }
 
-func (s OutputScreen) UpdateContent() {
-	s.SetText(s.content)
+// Concurrency(app.Draw), do not call in main thread
+func (s OutputScreen) RefreshContent() {
+	s.SetText(s.Content)
 	s.ScrollToBeginning()
 	app.Draw()
+}
+
+func (s *OutputScreen) ClearContent() {
+	s.Content = ""
+	s.SetText(s.Content)
 }

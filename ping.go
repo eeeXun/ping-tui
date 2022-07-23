@@ -64,7 +64,7 @@ func Ping(dest string) {
 		defer conn.Close()
 
 		// Send packet
-		output_box.title = fmt.Sprintf("PING %s (%s)", dest, raddr.String())
+		output_box.Title = fmt.Sprintf("PING %s (%s)", dest, raddr.String())
 		output_box.UpdateTitle()
 		_, err = conn.Write(send_buffer.Bytes())
 		CheckErr(err)
@@ -93,13 +93,13 @@ func Ping(dest string) {
 			panic("The checksum of the reply is incorrect")
 		}
 
-		if len(output_box.content) == 0 {
-			output_box.content = fmt.Sprintf("Reply from (%s): imcp_seq=%d ttl=%d time=%.2fms", raddr.String(), recv_pkt.SequenceNum, TTL, duration)
+		if len(output_box.Content) == 0 {
+			output_box.Content = fmt.Sprintf("Reply from (%s): imcp_seq=%d ttl=%d time=%.2fms", raddr.String(), recv_pkt.SequenceNum, TTL, duration)
 		} else {
-			output_box.content = fmt.Sprintf("Reply from (%s): imcp_seq=%d ttl=%d time=%.2fms\n%s", raddr.String(), recv_pkt.SequenceNum, TTL, duration, output_box.content)
+			output_box.Content = fmt.Sprintf("Reply from (%s): imcp_seq=%d ttl=%d time=%.2fms\n%s", raddr.String(), recv_pkt.SequenceNum, TTL, duration, output_box.Content)
 		}
 
-		output_box.UpdateContent()
+		output_box.RefreshContent()
 
 		time.Sleep(1 * sec)
 	}

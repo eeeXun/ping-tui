@@ -26,7 +26,7 @@ func UIInit() {
 
 	// tview.Box method
 	output_box.SetBorder(true).
-		SetTitle(output_box.title).
+		SetTitle(output_box.Title).
 		SetBackgroundColor(bg).
 		SetBorderColor(fg).
 		SetTitleColor(fg)
@@ -65,6 +65,12 @@ func OutputCaptureHandle(event *tcell.EventKey) *tcell.EventKey {
 	switch key {
 	case tcell.KeyTab, tcell.KeyBacktab:
 		app.SetFocus(input_box)
+	case tcell.KeyCtrlD:
+		stop_ping = true
+	case tcell.KeyCtrlL:
+		output_box.ClearContent()
+	case tcell.KeyCtrlQ:
+		app.Stop()
 	}
 
 	return event
