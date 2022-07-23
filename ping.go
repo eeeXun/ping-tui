@@ -39,6 +39,7 @@ func Ping(dest string) {
 		raddr, _           = net.ResolveIPAddr("ip", dest)
 		recv_buffer        = make([]byte, 1024)
 		seq         uint16 = 1
+		TTL         uint8
 	)
 
 	for ; ; seq++ {
@@ -69,6 +70,7 @@ func Ping(dest string) {
 		CheckErr(err)
 		duration := float64(time.Since(startTime).Nanoseconds()) / 1000000
 
+		TTL = uint8(recv_buffer[8])
 		// Check if Checksum is correct
 		recv_pkt = ICPMPacket{Type: uint8(recv_buffer[20]),
 			Code:        uint8(recv_buffer[21]),
@@ -85,9 +87,9 @@ func Ping(dest string) {
 		}
 
 		if len(screen.content) == 0 {
-			screen.content = fmt.Sprintf("Reply from (%s): imcp_seq=%d time=%.2fms", raddr.String(), recv_pkt.SequenceNum, duration)
+			screen.content = fmt.Sprintf("Reply from (%s): imcp_seq=%d ttl=%d time=%.2fms", raddr.String(), recv_pkt.SequenceNum, TTL, duration)
 		} else {
-			screen.content = fmt.Sprintf("Reply from (%s): imcp_seq=%d time=%.2fms\n%s", raddr.String(), recv_pkt.SequenceNum, duration, screen.content)
+			screen.content = fmt.Sprintf("Reply from (%s): imcp_seq=%d ttl=%d time=%.2fms\n%s", raddr.String(), recv_pkt.SequenceNum, TTL, duration, screen.content)
 		}
 		screen.UpdateContent()
 
