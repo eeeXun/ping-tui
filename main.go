@@ -17,8 +17,7 @@ var (
 	// UI
 	app        = tview.NewApplication()
 	input_box  = tview.NewInputField()
-	output_box = tview.NewTextView()
-	screen     = Screen{title: "PING"}
+	output_box = NewOutputScreen()
 	// Control
 	stop_ping bool = true
 	sec            = time.Second

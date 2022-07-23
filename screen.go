@@ -1,16 +1,28 @@
 package main
 
-type Screen struct {
+import(
+	"github.com/rivo/tview"
+)
+
+type OutputScreen struct {
+	*tview.TextView
 	title   string
 	content string
 }
 
-func (s Screen) UpdateTitle() {
-	output_box.SetTitle(s.title)
+func NewOutputScreen() *OutputScreen {
+	return &OutputScreen{
+		TextView: tview.NewTextView(),
+		title: "Ping",
+	}
 }
 
-func (s Screen) UpdateContent() {
-	output_box.SetText(s.content)
-	output_box.ScrollToBeginning()
+func (s OutputScreen) UpdateTitle() {
+	s.SetTitle(s.title)
+}
+
+func (s OutputScreen) UpdateContent() {
+	s.SetText(s.content)
+	s.ScrollToBeginning()
 	app.Draw()
 }

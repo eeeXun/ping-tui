@@ -2,13 +2,7 @@ package main
 
 import (
 	"github.com/gdamore/tcell/v2"
-	"github.com/rivo/tview"
 )
-
-type Output struct {
-	*tview.TextView
-	title string
-}
 
 func UIInit() {
 	bg := tcell.ColorDarkCyan
@@ -32,7 +26,7 @@ func UIInit() {
 
 	// tview.Box method
 	output_box.SetBorder(true).
-		SetTitle(screen.title).
+		SetTitle(output_box.title).
 		SetBackgroundColor(bg).
 		SetBorderColor(fg).
 		SetTitleColor(fg)
@@ -48,7 +42,7 @@ func InputDoneHandle(key tcell.Key) {
 	case tcell.KeyTab, tcell.KeyBacktab:
 		app.SetFocus(output_box)
 	case tcell.KeyEscape:
-		output_box.SetTitle(input_box.GetText())
+		app.Stop()
 	}
 }
 
@@ -56,8 +50,10 @@ func InputCaptureHandle(event *tcell.EventKey) *tcell.EventKey {
 	key := event.Key()
 
 	switch key {
-	case tcell.KeyCtrlD, tcell.KeyCtrlQ:
+	case tcell.KeyCtrlD:
 		stop_ping = true
+	case tcell.KeyCtrlQ:
+		app.Stop()
 	}
 
 	return event
