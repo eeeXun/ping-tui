@@ -60,20 +60,36 @@ func Ping(dest string) {
 		binary.Write(&send_buffer, binary.BigEndian, send_pkt)
 
 		conn, err := net.DialIP("ip4:icmp", &laddr, raddr)
-		CheckErr(err)
+		if err != nil {
+			output_box.AddText(err.Error())
+			output_box.RefreshText()
+			stop_ping = true
+			return
+		}
 		defer conn.Close()
 
 		// Send packet
 		output_box.Title = fmt.Sprintf("PING %s (%s)", dest, raddr.String())
 		output_box.UpdateTitle()
 		_, err = conn.Write(send_buffer.Bytes())
-		CheckErr(err)
+		if err != nil {
+			output_box.AddText(err.Error())
+			output_box.RefreshText()
+			stop_ping = true
+			return
+		}
 		conn.SetReadDeadline(time.Now().Add(3 * sec))
 
 		// Recv packet
 		startTime = time.Now()
 		_, err = conn.Read(recv_buffer)
-		CheckErr(err)
+		if err != nil {
+			output_box.AddText(err.Error())
+			output_box.RefreshText()
+			stop_ping = true
+			return
+		}
+		// milliseconds
 		duration = float64(time.Since(startTime).Nanoseconds()) / 1000000
 
 		// Reference: https://en.wikipedia.org/wiki/Ping_(networking_utility)#ICMP_packet
@@ -87,19 +103,19 @@ func Ping(dest string) {
 		}
 
 		if recv_pkt.CalcChecksum() != recv_pkt.Checksum {
-			app.Stop()
-			fmt.Println(recv_buffer)
-			fmt.Println(recv_pkt.Checksum, recv_pkt.CalcChecksum())
-			panic("The checksum of the reply is incorrect")
+			output_box.AddText("The checksum of the reply is incorrect")
+			output_box.RefreshText()
+			stop_ping = true
+			return
 		}
 
-		if len(output_box.Content) == 0 {
-			output_box.Content = fmt.Sprintf("Reply from (%s): imcp_seq=%d ttl=%d time=%.2fms", raddr.String(), recv_pkt.SequenceNum, TTL, duration)
-		} else {
-			output_box.Content = fmt.Sprintf("Reply from (%s): imcp_seq=%d ttl=%d time=%.2fms\n%s", raddr.String(), recv_pkt.SequenceNum, TTL, duration, output_box.Content)
-		}
-
-		output_box.RefreshContent()
+		output_box.AddText(fmt.Sprintf(
+			"Reply from (%s): imcp_seq=%d ttl=%d time=%.2fms",
+			raddr.String(),
+			recv_pkt.SequenceNum,
+			TTL,
+			duration))
+		output_box.RefreshText()
 
 		time.Sleep(1 * sec)
 	}

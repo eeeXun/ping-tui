@@ -7,7 +7,7 @@ import(
 type OutputScreen struct {
 	*tview.TextView
 	Title   string
-	Content string
+	Text string
 }
 
 func NewOutputScreen() *OutputScreen {
@@ -17,18 +17,26 @@ func NewOutputScreen() *OutputScreen {
 	}
 }
 
-func (s OutputScreen) UpdateTitle() {
-	s.SetTitle(s.Title)
+func (o *OutputScreen) AddText(s string) {
+	if len(o.Text) == 0 {
+		o.Text = s
+	} else {
+		o.Text = s + "\n" + o.Text
+	}
+}
+
+func (o OutputScreen) UpdateTitle() {
+	o.SetTitle(o.Title)
 }
 
 // Concurrency(app.Draw), do not call in main thread
-func (s OutputScreen) RefreshContent() {
-	s.SetText(s.Content)
-	s.ScrollToBeginning()
+func (o OutputScreen) RefreshText() {
+	o.SetText(o.Text)
+	o.ScrollToBeginning()
 	app.Draw()
 }
 
-func (s *OutputScreen) ClearContent() {
-	s.Content = ""
-	s.SetText(s.Content)
+func (o *OutputScreen) ClearText() {
+	o.Text = ""
+	o.SetText(o.Text)
 }

@@ -50,7 +50,7 @@ func InputCaptureHandle(event *tcell.EventKey) *tcell.EventKey {
 	key := event.Key()
 
 	switch key {
-	case tcell.KeyCtrlD:
+	case tcell.KeyCtrlD, tcell.KeyCtrlS:
 		stop_ping = true
 	case tcell.KeyCtrlQ:
 		app.Stop()
@@ -65,11 +65,11 @@ func OutputCaptureHandle(event *tcell.EventKey) *tcell.EventKey {
 	switch key {
 	case tcell.KeyTab, tcell.KeyBacktab:
 		app.SetFocus(input_box)
-	case tcell.KeyCtrlD:
+	case tcell.KeyCtrlD, tcell.KeyCtrlS:
 		stop_ping = true
 	case tcell.KeyCtrlL:
-		output_box.ClearContent()
-	case tcell.KeyCtrlQ:
+		output_box.ClearText()
+	case tcell.KeyCtrlQ, tcell.KeyEscape:
 		app.Stop()
 	}
 

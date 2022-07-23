@@ -20,7 +20,8 @@ var (
 	output_box = NewOutputScreen()
 	// Control
 	stop_ping bool = true
-	sec            = time.Second
+	// Other
+	sec         = time.Second
 )
 
 func main() {
