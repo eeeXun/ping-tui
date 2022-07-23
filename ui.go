@@ -35,7 +35,8 @@ func UIInit() {
 func InputDoneHandle(key tcell.Key) {
 	switch key {
 	case tcell.KeyEnter:
-		Ping(input_box.GetText())
+		stop_ping = false
+		go Ping(input_box.GetText())
 	case tcell.KeyTab, tcell.KeyBacktab:
 		app.SetFocus(output_box)
 	case tcell.KeyEscape:
@@ -48,7 +49,7 @@ func InputCaptureHandle(event *tcell.EventKey) *tcell.EventKey {
 
 	switch key {
 	case tcell.KeyCtrlD, tcell.KeyCtrlQ:
-		stop_ping = false
+		stop_ping = true
 	}
 
 	return event
