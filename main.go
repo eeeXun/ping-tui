@@ -19,9 +19,10 @@ var (
 	input_box  = tview.NewInputField()
 	output_box = NewOutputScreen()
 	// Control
-	stop_ping bool = true
+	stop_ping       bool = true
+	ping_thread_cnt      = 0
 	// Other
-	sec         = time.Second
+	sec = time.Second
 )
 
 func main() {

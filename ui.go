@@ -35,8 +35,9 @@ func UIInit() {
 func InputDoneHandle(key tcell.Key) {
 	switch key {
 	case tcell.KeyEnter:
-		if stop_ping {
+		if stop_ping && ping_thread_cnt == 0 {
 			stop_ping = false
+			ping_thread_cnt++
 			go Ping(input_box.GetText())
 		}
 	case tcell.KeyTab, tcell.KeyBacktab:

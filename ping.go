@@ -47,6 +47,7 @@ func Ping(dest string) {
 
 	for ; ; seq++ {
 		if stop_ping {
+			ping_thread_cnt--
 			return
 		}
 
@@ -64,6 +65,7 @@ func Ping(dest string) {
 			output_box.AddText(err.Error())
 			output_box.RefreshText()
 			stop_ping = true
+			ping_thread_cnt--
 			return
 		}
 		defer conn.Close()
@@ -76,6 +78,7 @@ func Ping(dest string) {
 			output_box.AddText(err.Error())
 			output_box.RefreshText()
 			stop_ping = true
+			ping_thread_cnt--
 			return
 		}
 		conn.SetReadDeadline(time.Now().Add(3 * sec))
@@ -87,6 +90,7 @@ func Ping(dest string) {
 			output_box.AddText(err.Error())
 			output_box.RefreshText()
 			stop_ping = true
+			ping_thread_cnt--
 			return
 		}
 		// milliseconds
@@ -106,6 +110,7 @@ func Ping(dest string) {
 			output_box.AddText("The checksum of the reply is incorrect")
 			output_box.RefreshText()
 			stop_ping = true
+			ping_thread_cnt--
 			return
 		}
 
