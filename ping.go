@@ -62,8 +62,7 @@ func Ping(dest string) {
 
 		conn, err := net.DialIP("ip4:icmp", &laddr, raddr)
 		if err != nil {
-			output_box.AddText(err.Error())
-			output_box.RefreshText()
+			output_box.AddText(err.Error()).RefreshText()
 			stop_ping = true
 			ping_thread_cnt--
 			return
@@ -75,8 +74,7 @@ func Ping(dest string) {
 		output_box.UpdateTitle()
 		_, err = conn.Write(send_buffer.Bytes())
 		if err != nil {
-			output_box.AddText(err.Error())
-			output_box.RefreshText()
+			output_box.AddText(err.Error()).RefreshText()
 			stop_ping = true
 			ping_thread_cnt--
 			return
@@ -87,8 +85,7 @@ func Ping(dest string) {
 		startTime = time.Now()
 		_, err = conn.Read(recv_buffer)
 		if err != nil {
-			output_box.AddText(err.Error())
-			output_box.RefreshText()
+			output_box.AddText(err.Error()).RefreshText()
 			stop_ping = true
 			ping_thread_cnt--
 			return
@@ -107,8 +104,7 @@ func Ping(dest string) {
 		}
 
 		if recv_pkt.CalcChecksum() != recv_pkt.Checksum {
-			output_box.AddText("The checksum of the reply is incorrect")
-			output_box.RefreshText()
+			output_box.AddText("The checksum of the reply is incorrect").RefreshText()
 			stop_ping = true
 			ping_thread_cnt--
 			return
@@ -119,8 +115,7 @@ func Ping(dest string) {
 			raddr.String(),
 			recv_pkt.SequenceNum,
 			TTL,
-			duration))
-		output_box.RefreshText()
+			duration)).RefreshText()
 
 		time.Sleep(1 * sec)
 	}
