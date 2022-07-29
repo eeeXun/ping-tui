@@ -1,42 +1,42 @@
 package main
 
-import(
+import (
 	"github.com/rivo/tview"
 )
 
 type OutputScreen struct {
 	*tview.TextView
-	Title   string
-	Text string
+	Title string
+	Text  string
 }
 
 func NewOutputScreen() *OutputScreen {
 	return &OutputScreen{
 		TextView: tview.NewTextView(),
-		Title: "Ping",
+		Title:    "Ping",
 	}
 }
 
-func (o *OutputScreen) AddText(s string) {
-	if len(o.Text) == 0 {
-		o.Text = s
+func (screen *OutputScreen) AddText(s string) {
+	if len(screen.Text) == 0 {
+		screen.Text = s
 	} else {
-		o.Text = s + "\n" + o.Text
+		screen.Text = screen.Text + "\n" + s
 	}
 }
 
-func (o OutputScreen) UpdateTitle() {
-	o.SetTitle(o.Title)
+func (screen OutputScreen) UpdateTitle() {
+	screen.SetTitle(screen.Title)
 }
 
 // Concurrency(app.Draw), do not call in main thread
-func (o OutputScreen) RefreshText() {
-	o.SetText(o.Text)
-	o.ScrollToBeginning()
+func (screen OutputScreen) RefreshText() {
+	screen.SetText(screen.Text)
+	screen.ScrollToEnd()
 	app.Draw()
 }
 
-func (o *OutputScreen) ClearText() {
-	o.Text = ""
-	o.SetText(o.Text)
+func (screen *OutputScreen) ClearText() {
+	screen.Text = ""
+	screen.SetText(screen.Text)
 }
