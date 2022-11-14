@@ -111,7 +111,7 @@ func Ping(dest string) {
 		}
 
 		output_box.AddText(fmt.Sprintf(
-			"Reply from (%s): imcp_seq=%d ttl=%d time=%.2fms",
+			"Reply from (%s): icmp_seq=%d ttl=%d time=%.2fms",
 			raddr.String(),
 			recv_pkt.SequenceNum,
 			TTL,
