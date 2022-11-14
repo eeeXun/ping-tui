@@ -17,7 +17,7 @@ func UIInit() {
 	// tview.InputField method
 	input_box.SetLabel("URL/IP: ").
 		SetFieldBackgroundColor(tcell.ColorRosyBrown).
-		SetFieldTextColor(tcell.ColorLightGray).
+		SetFieldTextColor(tcell.ColorBlack).
 		SetLabelColor(fg)
 	// Handle key
 	input_box.SetDoneFunc(InputDoneHandle)
@@ -25,6 +25,7 @@ func UIInit() {
 	output_box.SetInputCapture(OutputCaptureHandle)
 
 	// tview.Box method
+	output_box.SetTextColor(tcell.ColorBlack)
 	output_box.SetBorder(true).
 		SetTitle(output_box.Title).
 		SetBackgroundColor(bg).
